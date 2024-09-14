@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVC</title>
+</head>
+<body>
+    <div class="find-code">
+        <h1>กรอกข้อมูล code ของวัว 8 หลัก</h1>
+        <input type="number" id="cowCode" minlength="8" maxlength="8" required>
+        <button onclick="findCow()" type="button">ส่งข้อมูล</button>
+    </div>
+    <div id="total-milk">
+    </div>
+    <div id="cow-data">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        async function findCow() {
+            const cowCode = document.getElementById("cowCode").value;
+            if (cowCode.length === 8) {
+                if (cowCode.charAt(0) === '0') { 
+                    alert("ห้ามเริ่มต้นด้วย 0");
+                    return;
+                }
+                try {
+                    const response = await axios.get(`/api/cow/${parseInt(cowCode)}`);
+                    const cow = response.data;
+                    
+                    const cowDom = document.getElementById('cow-data');
+                    let htmlData = '<div>';
+                    if (cow.color === 'white' && cow.isBSOD === false && cow.lemonFed === false) {
+                        htmlData += `
+                            <p>Code: ${cow.code}</p>
+                            <p>Color: ${cow.color}</p>
+                            <p>Year: ${cow.year}</p>
+                            <p>Month: ${cow.month}</p>
+                            <p>Is BSOD: ${cow.isBSOD}</p>
+                            <p>Is Lemon Fed: ${cow.lemonFed}</p>
+                            <p>Total Milk: ${cow.totalMilk}</p>
+                            <button onclick="milking()">รีดนมวัว</button>
+                            <button onclick="feedLemon()">ป้อนมะนาว</button>
+                        `;
+                    }
+                    else if (cow.color === 'white' && cow.lemonFed === true) {
+                        htmlData += `
+                            <p>Code: ${cow.code}</p>
+                            <p>Color: ${cow.color}</p>
+                            <p>Year: ${cow.year}</p>
+                            <p>Month: ${cow.month}</p>
+                            <p>Is BSOD: ${cow.isBSOD}</p>
+                            <p>Total Milk: ${cow.totalMilk}</p>
+                            <button onclick="milking()">รีดนมวัว</button>
+                        `;
+                    }  
+                    else if (cow.color === 'white' && cow.isBSOD === true) {
+                        htmlData += `
+                            <p>Code: ${cow.code}</p>
+                            <p>Color: ${cow.color}</p>
+                            <p>Year: ${cow.year}</p>
+                            <p>Month: ${cow.month}</p>
+                            <p>Is BSOD: ${cow.isBSOD}</p>
+                            <p>Total Milk: ${cow.totalMilk}</p>
+                            <p>วัวตัวนี้รีดนมไม่ได้</p>
+                            <button onclick="reset()">reset</button>
+                        `;
+                    } 
+                    else if(cow.color === 'brown'){
+                        htmlData += `
+                            <p>Code: ${cow.code}</p>
+                            <p>Color: ${cow.color}</p>
+                            <p>Year: ${cow.year}</p>
+                            <p>Month: ${cow.month}</p>
+                            <p>Is BSOD: ${cow.isBSOD}</p>
+                            <p>Total Milk: ${cow.totalMilk}</p>
+                            <button onclick="milking()">รีดนมวัว</button>
+                        `;
+                    }
+                    htmlData += '</div>';
+
+                    cowDom.innerHTML = htmlData;
+                } 
+                catch (error) {
+                    console.error('Error:', error);
+                }
+            } 
+            else {
+                alert("กรอก code ของวัวให้ถูกต้อง");
+            }
+        }  
+
+        async function milking() {
+            const cowCode = document.getElementById("cowCode").value;
+
+            const response = await axios.get(`/api/cow/${parseInt(cowCode)}`);
+            const cow = response.data;
+            
+            if (cow.color === 'white'&& !cow.lemonFed === true) {
+                const id = 1
+                const milkData = await axios.get(`/api/milk/${id}`);
+                const milk = milkData.data;
+
+                let soilMilk = 0.5 * cow.month
+                let randomNumber = Math.random();
+                if(randomNumber > soilMilk) {
+                    // console.log("Random Number",randomNumber);
+                    // console.log("Random Number",soilMilk);
+                    cow.color = 'blue';
+                    cow.isBSOD = true;
+                }
+                else{
+                    milk.total = milk.total + 1;
+                    cow.totalMilk = cow.totalMilk + 1;
+                }
+                await axios.put(`/api/cow/${parseInt(cowCode)}`, cow);
+                await axios.put(`/api/milk/${id}`, milk);
+                await findCow();
+                fetchTotalMilk()
+            } 
+            else if(cow.color === 'brown') {
+                const id = 2
+                const milkData = await axios.get(`/api/milk/${id}`);
+                const milk = milkData.data;
+
+                let almondMilk = 1 * cow.year
+                if(Math.random() > almondMilk) {
+                    cow.color = 'blue';
+                    cow.isBSOD = true;
+                }
+                else{
+                    milk.total = milk.total + 1;
+                    cow.totalMilk = cow.totalMilk + 1;
+                }
+                await axios.put(`/api/cow/${parseInt(cowCode)}`, cow);
+                await axios.put(`/api/milk/${id}`, milk);
+                await findCow();
+                fetchTotalMilk()
+            }
+            else if(cow.color === 'white' && cow.lemonFed === true) {
+                const id = 3
+                const milkData = await axios.get(`/api/milk/${id}`);
+                const milk = milkData.data;
+                milk.total = milk.total + 1;
+                cow.totalMilk = cow.totalMilk + 1;
+            
+                await axios.put(`/api/cow/${parseInt(cowCode)}`, cow); 
+                await axios.put(`/api/milk/${id}`, milk);
+                await findCow();
+                fetchTotalMilk()
+            }
+        }
+
+        async function reset(){
+            const cowCode = document.getElementById("cowCode").value;
+            const response = await axios.get(`/api/cow/${parseInt(cowCode)}`);
+            const cow = response.data;
+            cow.isBSOD = false;
+            cow.color = 'white';
+            await axios.put(`/api/cow/${parseInt(cowCode)}`, cow);
+            await findCow();
+        }
+
+        async function feedLemon() {
+            const cowCode = document.getElementById("cowCode").value;
+            const response = await axios.get(`/api/cow/${parseInt(cowCode)}`);
+            const cow = response.data;
+            if (cow.color === 'white') {
+                cow.lemonFed = true;
+            } 
+            await axios.put(`/api/cow/${parseInt(cowCode)}`, cow);
+            await findCow();
+        }
+
+        async function fetchTotalMilk(){
+            const res = await axios.get('/api/milk');
+            const milks = res.data;
+
+            const milkDom = document.getElementById('total-milk');
+            let htmlData = '<div>';
+
+            for (let i = 0; i < milks.length; i++) {
+                const milk = milks[i];
+                htmlData += `<p>Name: ${milk.name}</p>
+                            <p>Total : ${milk.total}</p>
+                            `
+            }
+            htmlData += '</div>';
+            milkDom.innerHTML = htmlData;
+        }
+        fetchTotalMilk()
+    </script>
+</body>
+</html>

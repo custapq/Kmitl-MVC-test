@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Cow {
+  id    Int    @id @default(autoincrement())
+  code  Int    @unique
+  color String
+  year  Int
+  month Int
+  isBSOD Boolean
+  totalMilk Int
+  lemonFed Boolean
+}
+
+model Milk{
+  id    Int    @id @default(autoincrement())
+  name String @unique
+  total  Int    
+}
