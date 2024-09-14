@@ -33,7 +33,8 @@
         max-width: 500px;
       }
       .find-code input,
-      .find-code button {
+      .find-code button,
+      button {
         width: 100%;
         margin: 5px 0;
         padding: 5px;
@@ -161,8 +162,9 @@
           const milkData = await axios.get(`/api/milk/${id}`);
           const milk = milkData.data;
 
-          let soilMilk = 0.5 * cow.month;
+          let soilMilk = 0.05 * cow.month;
           let randomNumber = Math.random();
+          console.log(randomNumber," ",soilMilk)
           if (randomNumber > soilMilk) {
             cow.color = "blue";
             cow.isBSOD = true;
@@ -179,7 +181,7 @@
           const milkData = await axios.get(`/api/milk/${id}`);
           const milk = milkData.data;
 
-          let almondMilk = 1 * cow.year;
+          let almondMilk = 0.1 * cow.year;
           if (Math.random() > almondMilk) {
             cow.color = "blue";
             cow.isBSOD = true;
