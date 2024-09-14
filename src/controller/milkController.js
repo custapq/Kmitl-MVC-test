@@ -1,7 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Fetch all milk records
 const getMilk = async (req, res) => {
     try {
         const milks = await prisma.milk.findMany();
@@ -11,12 +10,12 @@ const getMilk = async (req, res) => {
     }
 };
 
-// Fetch a milk record by ID
+
 const getMilkById = async (req, res) => {
     const { id } = req.params;
     try {
         const milk = await prisma.milk.findUnique({
-            where: { id: parseInt(id) },  // Parse id to integer
+            where: { id: parseInt(id) }, 
         });
 
         if (milk) {
@@ -26,7 +25,7 @@ const getMilkById = async (req, res) => {
         }
     } catch (error) {
         console.error('Database error:', error);
-        res.status(500).json({ error: "An error occurred", details: error.message });
+        res.status(500).json({ error: "error", details: error.message });
     }
 };
 
