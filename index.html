@@ -165,7 +165,7 @@
           let soilMilk = 0.005 * cow.month;
           let randomNumber = Math.random();
           console.log(randomNumber, " ", soilMilk);
-          if (randomNumber > soilMilk) {
+          if (randomNumber < soilMilk) {
             cow.color = "blue";
             cow.isBSOD = true;
           } else {
@@ -183,7 +183,7 @@
 
           let almondMilk = 0.01 * cow.year;
           console.log(almondMilk, " ", Math.random());
-          if (Math.random() > almondMilk) {
+          if (Math.random() < almondMilk) {
             cow.color = "blue";
             cow.isBSOD = true;
           } else {
