@@ -162,7 +162,7 @@
           const milkData = await axios.get(`/api/milk/${id}`);
           const milk = milkData.data;
 
-          let soilMilk = 0.05 * cow.month;
+          let soilMilk = 0.005 * cow.month;
           let randomNumber = Math.random();
           console.log(randomNumber, " ", soilMilk);
           if (randomNumber > soilMilk) {
@@ -181,7 +181,8 @@
           const milkData = await axios.get(`/api/milk/${id}`);
           const milk = milkData.data;
 
-          let almondMilk = 0.1 * cow.year;
+          let almondMilk = 0.01 * cow.year;
+          console.log(almondMilk, " ", Math.random());
           if (Math.random() > almondMilk) {
             cow.color = "blue";
             cow.isBSOD = true;
