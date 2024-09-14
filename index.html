@@ -104,7 +104,7 @@
                                 <p>Total Milk: ${cow.totalMilk}</p>
                                 <button onclick="milking()">รีดนมวัว</button>
                             `;
-            } else if (cow.color === "white" && cow.isBSOD === true) {
+            } else if (cow.color === "blue" && cow.isBSOD === true) {
               htmlData += `
                                 <p>Code: ${cow.code}</p>
                                 <p>Color: ${cow.color}</p>
@@ -164,7 +164,7 @@
 
           let soilMilk = 0.05 * cow.month;
           let randomNumber = Math.random();
-          console.log(randomNumber," ",soilMilk)
+          console.log(randomNumber, " ", soilMilk);
           if (randomNumber > soilMilk) {
             cow.color = "blue";
             cow.isBSOD = true;
