@@ -9,14 +9,15 @@ const port = 3000;
 app.use(express.json());
 
 // ตั้งค่า api endpoint
-app.get('/api/cow/:code', getCowByCode);
-app.put('/api/cow/:code', updateCow);
-app.get('/api/cow', getCow);
-app.get('/api/milk/:id', getMilkById);
-app.put('/api/milk/:id', updateMilk);
-app.get('/api/milk', getMilk);
+app.get('/api/cow/:code', getCowByCode); // ดึงข้อมูลวัวแต่ละตัว
+app.put('/api/cow/:code', updateCow); // แก้ไขข้อมูลวัวแต่ละตัว
+app.get('/api/cow', getCow); // ดึงข้อมูลวัวทุกตัว
+app.get('/api/milk/:id', getMilkById); // แก้ไขข้อมูลนมแต่ละประเภท
+app.put('/api/milk/:id', updateMilk); // แก้ไขข้อมูลมแต่ละประเภท
+app.get('/api/milk', getMilk); // ดึงข้อมูลนมทุกประเภท
 
-app.get('/', function(req,res){
+// กำหนด path เริ่มต้น
+app.get('/', function(req,res){ 
     res.sendFile(path.join(__dirname, './index.html'));
 });
 

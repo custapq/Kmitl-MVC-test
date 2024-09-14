@@ -10,7 +10,7 @@ async function main() {
         ]
     });
 
-    console.log("Data seeding completed");
+    console.log("add milk complete");
 }
 
 main()

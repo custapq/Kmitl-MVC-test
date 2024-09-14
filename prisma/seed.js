@@ -10,7 +10,7 @@ async function main() {
     const colors = ['white', 'brown'];
 
     for (let i = 0; i < 10; i++) { 
-        await prisma.Cow.create({
+        await prisma.cow.create({
             data: {
                 code: generateRandomCode(),
                 color: colors[Math.floor(Math.random() * colors.length)],
@@ -23,7 +23,7 @@ async function main() {
         });
     }
 
-    console.log("Data seeding completed");
+    console.log("add cows mockup complete");
 }
 
 main()
