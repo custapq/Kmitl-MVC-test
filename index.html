@@ -4,24 +4,67 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MVC</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .card-container {
+        margin-top: 50px;
+        margin-bottom: 50px;
+      }
+      .card {
+        margin: 5px;
+        padding: 5px;
+        border: 1px solid black;
+        width: 200px;
+      }
+      #list-of-cow {
+        display: flex;
+        flex-direction: row;
+      }
+      .find-code {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 500px;
+      }
+      .find-code input,
+      .find-code button {
+        width: 100%;
+        margin: 5px 0;
+        padding: 5px;
+      }
+    </style>
   </head>
   <body>
-    <div class="find-code">
-      <h1>กรอกข้อมูล code ของวัว 8 หลัก</h1>
-      <input type="number" id="cowCode" minlength="8" maxlength="8" required />
-      <button onclick="findCow()" type="button">ส่งข้อมูล</button>
+    <div class="container">
+      <div class="find-code">
+        <h1>กรอกข้อมูล code ของวัว 8 หลัก</h1>
+        <input
+          type="number"
+          id="cowCode"
+          minlength="8"
+          maxlength="8"
+          required
+        />
+        <button onclick="findCow()" type="button">ส่งข้อมูล</button>
+      </div>
+      <div class="card-container" id="total-milk"></div>
+      <div class="card-container" id="cow-data"></div>
+      <div class="card-container" id="list-of-cow"></div>
     </div>
-    <div id="total-milk"></div>
-    <div id="cow-data"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-
-        // function สำหรับการค้นหาข้อมูลวัวด้วย code
+      // function สำหรับการค้นหาข้อมูลวัวด้วย code
       async function findCow() {
         const cowCode = document.getElementById("cowCode").value; // เข้าถึงข้อมูลที่พิมพ์
         if (cowCode.length === 8) {
-            // ตรวจสอบว่าขึ้นต้นด้วย 0 หรือไม่
+          // ตรวจสอบว่าขึ้นต้นด้วย 0 หรือไม่
           if (cowCode.charAt(0) === "0") {
             alert("ห้ามเริ่มต้นด้วย 0");
             return;
@@ -31,8 +74,8 @@
             const cow = response.data;
 
             const cowDom = document.getElementById("cow-data"); // เข้าถึง div เพื่อแสดงผลข้อมูล
-            let htmlData = "<div>";
-                // ตรวจสอบว่า cow มีสีอะไร เป็น BSOD หรือไม่ และ ถ้าเป็นสีขาวมีการให้กินมะนาวหรือไม่
+            let htmlData = `<div>`;
+            // ตรวจสอบว่า cow มีสีอะไร เป็น BSOD หรือไม่ และ ถ้าเป็นสีขาวมีการให้กินมะนาวหรือไม่
             if (
               cow.color === "white" &&
               cow.isBSOD === false &&
@@ -82,8 +125,7 @@
                                 <p>Total Milk: ${cow.totalMilk}</p>
                                 <button onclick="milking()">รีดนมวัว</button>
                             `;
-            }
-            else if (cow.color === "brown" && cow.isBSOD === true) {
+            } else if (cow.color === "brown" && cow.isBSOD === true) {
               htmlData += `
                                 <p>Code: ${cow.code}</p>
                                 <p>Color: ${cow.color}</p>
@@ -105,7 +147,6 @@
           alert("กรอก code ของวัวให้ถูกต้อง");
         }
       }
-
 
       // function ในการรีดนมวัว
       async function milking() {
@@ -205,6 +246,36 @@
       }
 
       fetchTotalMilk();
+
+      async function fetchCows() {
+        try {
+          const res = await axios.get("api/cow");
+          const cows = res.data;
+
+          const cowDom = document.getElementById("list-of-cow");
+
+          let htmlData = "";
+          for (let i = 0; i < cows.length; i++) {
+            const cow = cows[i];
+            htmlData += `
+                        <div class="card">
+                          <p>Code: ${cow.code}</p>
+                          <p>Color: ${cow.color}</p>
+                          <p>Year: ${cow.year}</p>
+                          <p>Month: ${cow.month}</p>
+                          <p>Total Milk: ${cow.totalMilk}</p>
+                          <p>Is BSOD: ${cow.isBSOD}</p>
+                          <p>Lemon Fed: ${cow.lemonFed}</p>
+                        </div>
+                      `;
+          }
+          cowDom.innerHTML = htmlData;
+        } catch (error) {
+          console.error("fetch cow error", error);
+        }
+      }
+
+      fetchCows();
     </script>
   </body>
 </html>

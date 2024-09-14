@@ -1,4 +1,12 @@
-# สอบการเขียนโปรแกรม MVC 
+# สอบการเขียนโปรแกรม MVC
+
+## การติดตั้งและรันโปรเจกต์
+
+Clone Project
+
+```bash
+git clone https://github.com/custapq/Kmitl-MVC-test.git
+```
 
 clone project
 
@@ -18,3 +26,4 @@ npm insatll
 npm run dev
 ```
 
+เรียก 
